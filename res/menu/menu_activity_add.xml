@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Search, should appear as action button -->
+    <item
+        android:id="@+id/action_add_gallery"
+        android:icon="@drawable/ic_action_new_picture"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_add_gallery"/>
+    <item
+        android:id="@+id/action_camera"
+        android:icon="@drawable/ic_action_camera"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_camera"/>
+
+    <!-- Settings, should always be in the overflow -->
+    <item
+        android:id="@+id/action_settings"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+
+</menu>
