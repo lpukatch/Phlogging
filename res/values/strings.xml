@@ -3,5 +3,8 @@
 
     <string name="app_name">Phlogging</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="action_camera">Camera!</string>
+        <string name="action_settings">Settings</string>
+    
+    
 </resources>
