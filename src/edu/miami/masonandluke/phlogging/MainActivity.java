@@ -3,6 +3,7 @@ package edu.miami.masonandluke.phlogging;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,7 +50,7 @@ public class MainActivity extends Activity {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	        case R.id.action_camera:
-	            
+	            Log.i("Test", "testing this");
 	            return true;
 	        case R.id.action_add:
 	            return true;
