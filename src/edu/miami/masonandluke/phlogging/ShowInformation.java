@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,10 +33,25 @@ public class ShowInformation extends Activity {
 		textView.setText(values.getAsString("description"));
 		
 		textView = (TextView)findViewById(R.id.show_date);
-		textView.setText(values.getAsInteger("time").toString());
+		
+		Time timeObject = new Time();
+		timeObject.set(values.getAsInteger("time"));
+		textView.setText(timeObject.format("%A %D %T"));
+		
+
+		double lat = values.getAsDouble("lat");
+		double lon = values.getAsDouble("long");
 		
 		textView = (TextView)findViewById(R.id.show_location);
-		textView.setText(values.getAsInteger("time").toString());
+		textView.setText("Latitude is: " + lat + "Longitude is: "+ lon);
+		
+		textView = (TextView)findViewById(R.id.show_orientation);
+		textView.setText(values.getAsFloat("orientation").toString());
+		
+		
+		
+		
+		
 		
 		
 		
