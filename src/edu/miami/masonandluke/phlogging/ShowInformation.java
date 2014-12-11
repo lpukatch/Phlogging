@@ -14,6 +14,8 @@ private long id = 0;
 		
 	id = this.getIntent().getLongExtra("edu.miami.masonandluke.phlogging.id", 0l);	
 	
+	
+	
 	}
 
 }
