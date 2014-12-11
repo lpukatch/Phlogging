@@ -2,47 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:gravity="center" >
 
     <TextView
         android:id="@+id/show_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:textSize="25sp" >
     </TextView>
 
     <TextView
         android:id="@+id/show_description"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:textSize="16sp" >
     </TextView>
 
     <TextView
         android:id="@+id/show_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:textSize="16sp" >
     </TextView>
 
     <ImageView
         android:id="@+id/show_photo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dp"
+        android:layout_weight="30" >
     </ImageView>
+
     <TextView
         android:id="@+id/show_location"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         android:textSize="16sp" >
     </TextView>
+
     <TextView
         android:id="@+id/show_orientation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         android:textSize="16sp" >
     </TextView>
-    
-    
 
 </LinearLayout>
