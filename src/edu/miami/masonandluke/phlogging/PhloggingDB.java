@@ -46,28 +46,28 @@ public class PhloggingDB {
 	}
 
 	// -----------------------------------------------------------------------------
-	public boolean addImage(ContentValues image) {
+	public boolean addPhlog(ContentValues phlog) {
 
-		return (theDB.insert(PHLOGGING_TABLE_NAME, null, image) >= 0);
+		return (theDB.insert(PHLOGGING_TABLE_NAME, null, phlog) >= 0);
 	}
 
 	// -----------------------------------------------------------------------------
-	public boolean updateImage(long imageId, ContentValues imageData) {
+	public boolean updatePhlog(long imageId, ContentValues imageData) {
 
 		return (theDB.update(PHLOGGING_TABLE_NAME, imageData, "_id =" + imageId,
 				null) > 0);
 	}
 
 	// -----------------------------------------------------------------------------
-	public boolean deleteImage(long imageId) {
+	public boolean deletePhlog(long imageId) {
 
 		return (theDB.delete(PHLOGGING_TABLE_NAME, "_id =" + imageId, null) > 0);
 	}
 
 	// -----------------------------------------------------------------------------
-	public Cursor fetchAllImages() {
+	public Cursor fetchAllPhlogs() {
 
-		String[] fieldNames = { "_id", "image_id", "description", "recording",
+		String[] fieldNames = { "_id", "image_id", "image_data", "title", "recording",
 				"image_data" };
 
 		return (theDB.query(PHLOGGING_TABLE_NAME, fieldNames, null, null, null,
@@ -103,7 +103,7 @@ public class PhloggingDB {
 				Log.i("remove", data);
 				if (!(new File(data)).exists()) {
 					Log.i("is there a picture?", "no");
-					deleteImage(imageMediaId);
+					deletePhlog(imageMediaId);
 				}
 			} while (cursor.moveToNext());
 		}
@@ -140,10 +140,18 @@ public class PhloggingDB {
 					songData.put("_id", cursor.getInt(index));
 				} else if (fieldNames[index].equals("image_id")) {
 					songData.put("image_id", cursor.getInt(index));
-				} else if (fieldNames[index].equals("description")) {
-					songData.put("description", cursor.getString(index));
+				} else if (fieldNames[index].equals("title")) {
+					songData.put("title", cursor.getString(index));
 				} else if (fieldNames[index].equals("image_data")) {
 					songData.put("image_data", cursor.getString(index));
+				} else if (fieldNames[index].equals("time")) {
+					songData.put("time", cursor.getInt(index));
+				} else if (fieldNames[index].equals("lat")) {
+					songData.put("lat", cursor.getDouble(index));
+				} else if (fieldNames[index].equals("long")) {
+					songData.put("long", cursor.getDouble(index));
+				} else if (fieldNames[index].equals("orientaton")) {
+					songData.put("orientation", cursor.getFloat(index));
 				} else if (fieldNames[index].equals("recording")) {
 					songData.put("recording", cursor.getBlob(index));
 				}
