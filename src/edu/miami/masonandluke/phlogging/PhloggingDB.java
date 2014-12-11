@@ -23,7 +23,7 @@ public class PhloggingDB {
 			+ "image_data STRING NOT NULL UNIQUE, "
 			+ "title TEXT,"
 			+ "description TEXT,"
-			+ "time INTEGER NOT NULL UNIQUE,"
+			+ "time LONG NOT NULL UNIQUE,"
 			+ "lat DOUBLE,"
 			+ "long DOUBLE,"
 			+ "orientation FLOAT,"
