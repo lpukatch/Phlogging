@@ -19,8 +19,8 @@ public class PhloggingDB {
 	private static final String CREATE_IMAGE_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ PHLOGGING_TABLE_NAME
 			+ "(_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ "image_id INTEGER NOT NULL UNIQUE, "
-			+ "image_data STRING NOT NULL UNIQUE, "
+			+ "image_id INTEGER UNIQUE, "
+			+ "image_data STRING UNIQUE, "
 			+ "title TEXT,"
 			+ "description TEXT,"
 			+ "time LONG NOT NULL UNIQUE,"
@@ -69,7 +69,7 @@ public class PhloggingDB {
 	public Cursor fetchAllPhlogs() {
 
 		String[] fieldNames = { "_id", "image_id", "image_data", "title", "recording",
-				"image_data" };
+				"image_data", "time" };
 
 		return (theDB.query(PHLOGGING_TABLE_NAME, fieldNames, null, null, null,
 				null, "image_id"));
