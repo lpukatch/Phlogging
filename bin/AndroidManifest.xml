@@ -26,13 +26,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity
+        <activity
             android:name=".AddActivity"
             android:label="@string/title_activity_add" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
         </activity>
-         <activity
+        <activity
             android:name=".ShowInformation"
             android:label="@string/title_activity_show" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
         </activity>
     </application>
 

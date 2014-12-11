@@ -18,6 +18,11 @@ public final class R {
     }
     public static final class id {
         public static final int action_add=0x7f060009;
+<<<<<<< HEAD
+=======
+        public static final int action_add_gallery=0x7f06000b;
+        public static final int action_camera=0x7f06000c;
+>>>>>>> 5946e9a3cde6e279175adba216f2fbcc943812e7
         public static final int action_settings=0x7f06000a;
         public static final int photo=0x7f060001;
         public static final int show_date=0x7f060005;

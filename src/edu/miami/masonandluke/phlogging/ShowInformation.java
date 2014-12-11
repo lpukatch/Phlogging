@@ -21,33 +21,33 @@ public class ShowInformation extends Activity {
 		id = this.getIntent().getLongExtra("edu.miami.masonandluke.phlogging.id", 0l);	
 
 		ContentValues values = phlogDB.getImageById(id);
-        Uri imageUri = Uri.parse(values.getAsString("imageData"));
-		ImageView imageView = (ImageView)findViewById(R.id.show_photo);
-		imageView.setImageURI(imageUri);
+       // Uri imageUri = Uri.parse(values.getAsString("imageData"));
+	//	ImageView imageView = (ImageView)findViewById(R.id.show_photo);
+	//	imageView.setImageURI(imageUri);
 		
 		TextView textView = (TextView)findViewById(R.id.show_title);
-		textView.setText(values.getAsString("title"));
-		
-		
-	    textView = (TextView)findViewById(R.id.show_description);
-		textView.setText(values.getAsString("description"));
-		
-		textView = (TextView)findViewById(R.id.show_date);
-		
+//		textView.setText(values.getAsString("title"));
+//		
+//		
+//	    textView = (TextView)findViewById(R.id.show_description);
+//		textView.setText(values.getAsString("description"));
+//		
+//		textView = (TextView)findViewById(R.id.show_date);
+//		
 		Time timeObject = new Time();
 		timeObject.set(values.getAsInteger("time"));
 		textView.setText(timeObject.format("%A %D %T"));
 		
 
-		double lat = values.getAsDouble("lat");
-		double lon = values.getAsDouble("long");
-		
-		textView = (TextView)findViewById(R.id.show_location);
-		textView.setText("Latitude is: " + lat + "Longitude is: "+ lon);
-		
-		textView = (TextView)findViewById(R.id.show_orientation);
-		textView.setText(values.getAsFloat("orientation").toString());
-		
+//		double lat = values.getAsDouble("lat");
+//		double lon = values.getAsDouble("long");
+//		
+//		textView = (TextView)findViewById(R.id.show_location);
+//		textView.setText("Latitude is: " + lat + "Longitude is: "+ lon);
+//		
+//		textView = (TextView)findViewById(R.id.show_orientation);
+//		textView.setText(values.getAsFloat("orientation").toString());
+//		
 		
 		
 		
