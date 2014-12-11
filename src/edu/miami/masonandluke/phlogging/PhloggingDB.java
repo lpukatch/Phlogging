@@ -22,6 +22,7 @@ public class PhloggingDB {
 			+ "image_id INTEGER NOT NULL UNIQUE, "
 			+ "image_data STRING NOT NULL UNIQUE, "
 			+ "title TEXT,"
+			+ "description TEXT,"
 			+ "time INTEGER NOT NULL UNIQUE,"
 			+ "lat DOUBLE,"
 			+ "long DOUBLE,"
@@ -144,6 +145,8 @@ public class PhloggingDB {
 					songData.put("title", cursor.getString(index));
 				} else if (fieldNames[index].equals("image_data")) {
 					songData.put("image_data", cursor.getString(index));
+				} else if (fieldNames[index].equals("description")) {
+					songData.put("description", cursor.getString(index));
 				} else if (fieldNames[index].equals("time")) {
 					songData.put("time", cursor.getInt(index));
 				} else if (fieldNames[index].equals("lat")) {
