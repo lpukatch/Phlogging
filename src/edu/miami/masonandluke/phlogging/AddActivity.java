@@ -29,7 +29,6 @@ public class AddActivity extends Activity {
 
 	private static final int ACTIVITY_CAMERA_APP = 0;
 	private static final int SELECT_PICTURE = 1;
-	private Uri fileUri;
 	private PhloggingDB phlogDB;
 	private File photoFile;
 

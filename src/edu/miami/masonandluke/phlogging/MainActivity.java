@@ -34,6 +34,8 @@ public class MainActivity extends Activity implements
 		OnItemLongClickListener {
 	private static final int ACTIVITY_ADD = 0;
 
+	private static final int ACTIVITY_SHOW = 1;
+
 	private PhloggingDB phlogDB;
 	private Cursor listCursor;
 
@@ -107,7 +109,7 @@ public class MainActivity extends Activity implements
 		showInfo.setClassName("edu.miami.masonandluke.phlogging",
 				"edu.miami.masonandluke.phlogging.ShowInformation");
 		showInfo.putExtra("edu.miami.masonandluke.phlogging.id", id);
-		startActivity(showInfo);
+		startActivityForResult(showInfo, ACTIVITY_SHOW);
 
 	}
 
