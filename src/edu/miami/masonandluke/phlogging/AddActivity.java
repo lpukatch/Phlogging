@@ -1,6 +1,8 @@
 package edu.miami.masonandluke.phlogging;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,6 +11,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,7 +20,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class AddActivity extends Activity {
@@ -26,55 +31,13 @@ public class AddActivity extends Activity {
 	private static final int ACTIVITY_CAMERA_APP = 0;
 	private Uri fileUri;
 	private PhloggingDB phlogDB;
+	private File photoFile;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
 		phlogDB = new PhloggingDB(this);
-
-	}
-
-	/** Create a file Uri for saving an image or video */
-	private static Uri getOutputMediaFileUri(int type) {
-		return Uri.fromFile(getOutputMediaFile(type));
-	}
-
-	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(int type) {
-		// To be safe, you should check that the SDCard is mounted
-		// using Environment.getExternalStorageState() before doing this.
-
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"MyCameraApp");
-		// This location works best if you want the created images to be shared
-		// between applications and persist after your app has been uninstalled.
-
-		// Create the storage directory if it does not exist
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("MyCameraApp", "failed to create directory");
-				return null;
-			}
-		}
-
-		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-				.format(new Date());
-		File mediaFile;
-		if (type == MEDIA_TYPE_IMAGE) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "IMG_" + timeStamp + ".jpg");
-		} else if (type == MEDIA_TYPE_VIDEO) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "VID_" + timeStamp + ".mp4");
-		} else {
-			return null;
-		}
-
-		return mediaFile;
 	}
 
 	@Override
@@ -87,18 +50,30 @@ public class AddActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
-		Intent cameraIntent;
 
 		switch (item.getItemId()) {
 		case R.id.action_camera:
-			fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-			Log.i("fileuri", fileUri + "");
-			cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			Intent takePictureIntent = new Intent(
+					MediaStore.ACTION_IMAGE_CAPTURE);
+			// Ensure that there's a camera activity to handle the intent
+			if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+				// Create the File where the photo should go
+				photoFile = null;
+				try {
+					photoFile = createImageFile();
+				} catch (IOException ex) {
+					// Error occurred while creating the File
 
-			cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-			startActivityForResult(cameraIntent, ACTIVITY_CAMERA_APP);
+				}
+				// Continue only if the File was successfully created
+				if (photoFile != null) {
+					takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+							Uri.fromFile(photoFile));
+					startActivityForResult(takePictureIntent,
+							ACTIVITY_CAMERA_APP);
+				}
+			}
 			return true;
-
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -113,25 +88,11 @@ public class AddActivity extends Activity {
 				Toast.makeText(this, "Image saved to:\n" + fileUri,
 						Toast.LENGTH_LONG).show();
 
-				String[] queryFields = { MediaStore.Images.Media._ID,
-						MediaStore.Images.Media.DATA };
-//
-//				Cursor imagesCursor = managedQuery(
-//						MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//						queryFields, null, null,
-//						MediaStore.Images.Media.DEFAULT_SORT_ORDER);
-//				imagesCursor.moveToFirst();
-//				int column = imagesCursor
-//						.getColumnIndex(MediaStore.Images.Media._ID);
-//				int id = imagesCursor.getInt(column);
-				ContentValues content = new ContentValues();
-//Log.i("image_id", id + "");
-				long time = System.currentTimeMillis();
-
-				content.put("time", time);
-				content.put("image_data", fileUri.toString());
 				
-				phlogDB.addPhlog(content);
+
+				ImageView view = (ImageView) findViewById(R.id.photo);
+				view.setImageURI(Uri.fromFile(photoFile));
+
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
 			} else {
@@ -140,5 +101,46 @@ public class AddActivity extends Activity {
 
 			break;
 		}
+	}
+
+	String mCurrentPhotoPath;
+
+	public void myClickHandler(View view) {
+
+		switch (view.getId()) {
+
+		case R.id.save:
+			String description = ((EditText) findViewById(R.id.editDescription))
+					.getText().toString();
+			String title = ((EditText) findViewById(R.id.editTitle))
+					.getText().toString();
+			long time = System.currentTimeMillis();
+			ContentValues values = new ContentValues();
+			values.put("description", description);
+			values.put("title", title);
+			values.put("image_data", photoFile.toString());
+			values.put("time", time);
+			phlogDB.addPhlog(values);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private File createImageFile() throws IOException {
+		// Create an image file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+				.format(new Date());
+		String imageFileName = "JPEG_" + timeStamp + "_";
+		File storageDir = getApplicationContext().getExternalFilesDir(null);
+		File image = File.createTempFile(imageFileName, /* prefix */
+				".jpg", /* suffix */
+				storageDir /* directory */
+		);
+
+		// Save a file: path for use with ACTION_VIEW intents
+		mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+		return image;
 	}
 }

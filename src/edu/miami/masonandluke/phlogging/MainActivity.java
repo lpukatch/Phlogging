@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -120,9 +122,13 @@ public class MainActivity extends Activity implements
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		// TODO Auto-generated method stub
 		if (columnIndex == cursor.getColumnIndex("image_data")) {
-			
+			Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory
+					.decodeFile(cursor.getString(cursor
+							.getColumnIndex("image_data"))), 64, 64);
+			((ImageView) view).setImageBitmap(ThumbImage);
 
-			//((ImageView) view).setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndex("image_data"))));
+			// ((ImageView)
+			// view).setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndex("image_data"))));
 			return true;
 		} else {
 			return false;

@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="20"
+        android:hint="No Title"
         android:textSize="25sp" >
     </TextView>
 
@@ -18,6 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="20"
+                android:hint="No Description"
+        
         android:textSize="16sp" >
     </TextView>
 
@@ -41,6 +44,8 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="10"
+                android:hint="No location"
+        
         android:textSize="16sp" >
     </TextView>
 
@@ -49,6 +54,8 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="10"
+                android:hint="No Orientation"
+        
         android:textSize="16sp" >
     </TextView>
 
