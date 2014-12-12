@@ -18,11 +18,8 @@ public final class R {
     }
     public static final class id {
         public static final int action_add=0x7f060009;
-<<<<<<< HEAD
-=======
         public static final int action_add_gallery=0x7f06000b;
         public static final int action_camera=0x7f06000c;
->>>>>>> 5946e9a3cde6e279175adba216f2fbcc943812e7
         public static final int action_settings=0x7f06000a;
         public static final int photo=0x7f060001;
         public static final int show_date=0x7f060005;
@@ -35,12 +32,14 @@ public final class R {
         public static final int title=0x7f060002;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int list_items=0x7f030001;
-        public static final int showinformation=0x7f030002;
+        public static final int activity_add=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int list_items=0x7f030002;
+        public static final int showinformation=0x7f030003;
     }
     public static final class menu {
         public static final int main_activity_actions=0x7f050000;
+        public static final int menu_activity_add=0x7f050001;
     }
     public static final class string {
         public static final int action_add=0x7f040005;
