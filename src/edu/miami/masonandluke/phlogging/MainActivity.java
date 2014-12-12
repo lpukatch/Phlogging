@@ -32,8 +32,6 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements
 		android.widget.SimpleCursorAdapter.ViewBinder, OnItemClickListener,
 		OnItemLongClickListener {
-	private static final int ACTIVITY_CAMERA_APP = 0;
-
 	private static final int ACTIVITY_ADD = 0;
 
 	private PhloggingDB phlogDB;
@@ -129,8 +127,6 @@ public class MainActivity extends Activity implements
 							.getColumnIndex("image_data"))), 64, 64);
 			((ImageView) view).setImageBitmap(ThumbImage);
 
-			// ((ImageView)
-			// view).setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndex("image_data"))));
 			return true;
 		} else if (columnIndex == cursor.getColumnIndex("time")) {
 			long time = cursor.getLong(columnIndex);

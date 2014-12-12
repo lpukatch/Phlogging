@@ -26,9 +26,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class AddActivity extends Activity {
-	public static final int MEDIA_TYPE_IMAGE = 1;
-	public static final int MEDIA_TYPE_VIDEO = 2;
+
 	private static final int ACTIVITY_CAMERA_APP = 0;
+	private static final int SELECT_PICTURE = 1;
 	private Uri fileUri;
 	private PhloggingDB phlogDB;
 	private File photoFile;
@@ -74,6 +74,14 @@ public class AddActivity extends Activity {
 				}
 			}
 			return true;
+		case R.id.action_add_gallery:
+			 // select a file
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent,
+                    "Select Picture"), SELECT_PICTURE);
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -85,9 +93,6 @@ public class AddActivity extends Activity {
 		case ACTIVITY_CAMERA_APP:
 			if (resultCode == RESULT_OK) {
 				// Image captured and saved to fileUri specified in the Intent
-				Toast.makeText(this, "Image saved to:\n" + fileUri,
-						Toast.LENGTH_LONG).show();
-
 				ImageView view = (ImageView) findViewById(R.id.photo);
 				view.setImageURI(Uri.fromFile(photoFile));
 
@@ -96,10 +101,42 @@ public class AddActivity extends Activity {
 			} else {
 				// Image capture failed, advise user
 			}
-
+			break;
+		case SELECT_PICTURE:
+			if (resultCode == RESULT_OK) {
+				
+				// Image captured and saved to fileUri specified in the Intent
+				ImageView view = (ImageView) findViewById(R.id.photo);
+				view.setImageURI(data.getData());
+				photoFile = new File(getPath(data.getData()));
+			} else if (resultCode == RESULT_CANCELED) {
+				// User cancelled the image capture
+			} else {
+				// Image capture failed, advise user
+			}
 			break;
 		}
 	}
+	 public String getPath(Uri uri) {
+         // just some safety built in 
+         if( uri == null ) {
+             // TODO perform some logging or show user feedback
+             return null;
+         }
+         // try to retrieve the image from the media store first
+         // this will only work for images selected from gallery
+         String[] projection = { MediaStore.Images.Media.DATA };
+         Cursor cursor = managedQuery(uri, projection, null, null, null);
+         if( cursor != null ){
+             int column_index = cursor
+             .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+             cursor.moveToFirst();
+             return cursor.getString(column_index);
+         }
+         // this is our fallback here
+         return uri.getPath();
+ }
+
 
 	String mCurrentPhotoPath;
 
