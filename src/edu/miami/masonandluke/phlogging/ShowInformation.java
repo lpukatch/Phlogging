@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,18 +22,19 @@ public class ShowInformation extends Activity {
 		id = this.getIntent().getLongExtra("edu.miami.masonandluke.phlogging.id", 0l);	
 
 		ContentValues values = phlogDB.getImageById(id);
-       // Uri imageUri = Uri.parse(values.getAsString("imageData"));
-	//	ImageView imageView = (ImageView)findViewById(R.id.show_photo);
-	//	imageView.setImageURI(imageUri);
+        Uri imageUri = Uri.parse(values.getAsString("image_data"));
+		ImageView imageView = (ImageView)findViewById(R.id.show_photo);
+		imageView.setImageURI(imageUri);
 		
 		TextView textView = (TextView)findViewById(R.id.show_title);
-//		textView.setText(values.getAsString("title"));
+		textView.setText(values.getAsString("title"));
 //		
 //		
-//	    textView = (TextView)findViewById(R.id.show_description);
-//		textView.setText(values.getAsString("description"));
+	    textView = (TextView)findViewById(R.id.show_description);
+		textView.setText(values.getAsString("description"));
+		Log.i("description", values.getAsString("description"));
 //		
-//		textView = (TextView)findViewById(R.id.show_date);
+	textView = (TextView)findViewById(R.id.show_date);
 //		
 		Time timeObject = new Time();
 		timeObject.set(values.getAsInteger("time"));
