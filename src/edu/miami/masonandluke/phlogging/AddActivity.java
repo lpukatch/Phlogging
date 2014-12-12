@@ -88,8 +88,6 @@ public class AddActivity extends Activity {
 				Toast.makeText(this, "Image saved to:\n" + fileUri,
 						Toast.LENGTH_LONG).show();
 
-				
-
 				ImageView view = (ImageView) findViewById(R.id.photo);
 				view.setImageURI(Uri.fromFile(photoFile));
 
@@ -112,15 +110,18 @@ public class AddActivity extends Activity {
 		case R.id.save:
 			String description = ((EditText) findViewById(R.id.editDescription))
 					.getText().toString();
-			String title = ((EditText) findViewById(R.id.editTitle))
-					.getText().toString();
+			String title = ((EditText) findViewById(R.id.editTitle)).getText()
+					.toString();
 			long time = System.currentTimeMillis();
 			ContentValues values = new ContentValues();
 			values.put("description", description);
 			values.put("title", title);
-			values.put("image_data", photoFile.toString());
+			if (photoFile != null) {
+				values.put("image_data", photoFile.toString());
+			}
 			values.put("time", time);
 			phlogDB.addPhlog(values);
+			finish();
 			break;
 
 		default:

@@ -76,7 +76,7 @@ public class PhloggingDB {
 	}
 
 	// -----------------------------------------------------------------------------
-	public ContentValues getImageById(long imageId) {
+	public ContentValues getPhlogById(long imageId) {
 
 		Cursor cursor;
 		ContentValues imageData;
@@ -148,7 +148,7 @@ public class PhloggingDB {
 				} else if (fieldNames[index].equals("description")) {
 					songData.put("description", cursor.getString(index));
 				} else if (fieldNames[index].equals("time")) {
-					songData.put("time", cursor.getInt(index));
+					songData.put("time", cursor.getLong(index));
 				} else if (fieldNames[index].equals("lat")) {
 					songData.put("lat", cursor.getDouble(index));
 				} else if (fieldNames[index].equals("long")) {

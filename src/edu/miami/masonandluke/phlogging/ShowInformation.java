@@ -21,7 +21,7 @@ public class ShowInformation extends Activity {
 		phlogDB = new PhloggingDB(this);
 		id = this.getIntent().getLongExtra("edu.miami.masonandluke.phlogging.id", 0l);	
 
-		ContentValues values = phlogDB.getImageById(id);
+		ContentValues values = phlogDB.getPhlogById(id);
         Uri imageUri = Uri.parse(values.getAsString("image_data"));
 		ImageView imageView = (ImageView)findViewById(R.id.show_photo);
 		imageView.setImageURI(imageUri);
@@ -37,7 +37,7 @@ public class ShowInformation extends Activity {
 	textView = (TextView)findViewById(R.id.show_date);
 //		
 		Time timeObject = new Time();
-		timeObject.set(values.getAsInteger("time"));
+		timeObject.set(values.getAsLong("time"));
 		textView.setText(timeObject.format("%A %D %T"));
 		
 
