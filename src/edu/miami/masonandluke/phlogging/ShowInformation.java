@@ -48,11 +48,11 @@ public class ShowInformation extends Activity {
 		timeObject.set(values.getAsLong("time"));
 		textView.setText(timeObject.format("%A %D %T"));
 
-		// double lat = values.getAsDouble("lat");
-		// double lon = values.getAsDouble("long");
+		 double lat = values.getAsDouble("lat");
+		double lon = values.getAsDouble("long");
 		//
-		// textView = (TextView)findViewById(R.id.show_location);
-		// textView.setText("Latitude is: " + lat + "Longitude is: "+ lon);
+		 textView = (TextView)findViewById(R.id.show_location);
+		 textView.setText("Latitude is: " + lat + " Longitude is: "+ lon);
 		//
 		// textView = (TextView)findViewById(R.id.show_orientation);
 		// textView.setText(values.getAsFloat("orientation").toString());

@@ -5,12 +5,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,18 +29,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class AddActivity extends Activity {
+public class AddActivity extends Activity implements
+LocationListener{
 
 	private static final int ACTIVITY_CAMERA_APP = 0;
 	private static final int SELECT_PICTURE = 1;
 	private PhloggingDB phlogDB;
 	private File photoFile;
+	private LocationManager locationManager;
+	private double Lat;
+	private double Lon;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
 		phlogDB = new PhloggingDB(this);
+		getLocation();
+
 	}
 
 	@Override
@@ -74,13 +84,13 @@ public class AddActivity extends Activity {
 			}
 			return true;
 		case R.id.action_add_gallery:
-			 // select a file
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent,
-                    "Select Picture"), SELECT_PICTURE);
-            return true;
+			// select a file
+			Intent intent = new Intent();
+			intent.setType("image/*");
+			intent.setAction(Intent.ACTION_GET_CONTENT);
+			startActivityForResult(Intent.createChooser(intent,
+					"Select Picture"), SELECT_PICTURE);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -103,7 +113,7 @@ public class AddActivity extends Activity {
 			break;
 		case SELECT_PICTURE:
 			if (resultCode == RESULT_OK) {
-				
+
 				// Image captured and saved to fileUri specified in the Intent
 				ImageView view = (ImageView) findViewById(R.id.photo);
 				view.setImageURI(data.getData());
@@ -116,25 +126,25 @@ public class AddActivity extends Activity {
 			break;
 		}
 	}
-	 public String getPath(Uri uri) {
-         // just some safety built in 
-         if( uri == null ) {
-             // TODO perform some logging or show user feedback
-             return null;
-         }
-         // try to retrieve the image from the media store first
-         // this will only work for images selected from gallery
-         String[] projection = { MediaStore.Images.Media.DATA };
-         Cursor cursor = managedQuery(uri, projection, null, null, null);
-         if( cursor != null ){
-             int column_index = cursor
-             .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-             cursor.moveToFirst();
-             return cursor.getString(column_index);
-         }
-         // this is our fallback here
-         return uri.getPath();
- }
+	public String getPath(Uri uri) {
+		// just some safety built in 
+		if( uri == null ) {
+			// TODO perform some logging or show user feedback
+			return null;
+		}
+		// try to retrieve the image from the media store first
+		// this will only work for images selected from gallery
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = managedQuery(uri, projection, null, null, null);
+		if( cursor != null ){
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		}
+		// this is our fallback here
+		return uri.getPath();
+	}
 
 
 	String mCurrentPhotoPath;
@@ -145,7 +155,7 @@ public class AddActivity extends Activity {
 
 		case R.id.save:
 			String description = ((EditText) findViewById(R.id.editDescription))
-					.getText().toString();
+			.getText().toString();
 			String title = ((EditText) findViewById(R.id.editTitle)).getText()
 					.toString();
 			long time = System.currentTimeMillis();
@@ -156,6 +166,8 @@ public class AddActivity extends Activity {
 				values.put("image_data", photoFile.toString());
 			}
 			values.put("time", time);
+			values.put("long",Lon);
+			values.put("lat",Lat);
 			phlogDB.addPhlog(values);
 			finish();
 			break;
@@ -168,16 +180,78 @@ public class AddActivity extends Activity {
 	private File createImageFile() throws IOException {
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-				.format(new Date());
+		.format(new Date());
 		String imageFileName = "JPEG_" + timeStamp + "_";
 		File storageDir = getApplicationContext().getExternalFilesDir(null);
 		File image = File.createTempFile(imageFileName, /* prefix */
 				".jpg", /* suffix */
 				storageDir /* directory */
-		);
+				);
 
 		// Save a file: path for use with ACTION_VIEW intents
 		mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 		return image;
 	}
+
+	//-----------------------------------------------------------------------------
+	@Override
+	public void onPause() {
+
+		super.onPause();
+
+		locationManager.removeUpdates(this);
+	}
+	//-----------------------------------------------------------------------------
+
+    private void getLocation() {
+    	locationManager = (LocationManager)(getSystemService(LOCATION_SERVICE));
+    	detectLocators();
+    }
+    
+	//-----------------------------------------------------------------------------
+	private void detectLocators() {
+
+		List<String> locators;
+		locators = locationManager.getProviders(true);
+
+			if (locators.contains("gps")) {
+				locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this,null);	
+			}
+			else if  (locators.contains("network")) {
+				locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
+			}
+			else {
+				Toast.makeText(this,"Location Services Off",Toast.LENGTH_LONG).show();
+		}
+	}
+	//-----------------------------------------------------------------------------
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		Lon = location.getLatitude();
+		Lat = location.getLongitude();
+		locationManager.removeUpdates(this);
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
 }
