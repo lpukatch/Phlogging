@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
@@ -30,9 +32,9 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements
 		android.widget.SimpleCursorAdapter.ViewBinder, OnItemClickListener,
 		OnItemLongClickListener {
-	private static final int ACTIVITY_CAMERA_APP = 0;
-
 	private static final int ACTIVITY_ADD = 0;
+
+	private static final int ACTIVITY_SHOW = 1;
 
 	private PhloggingDB phlogDB;
 	private Cursor listCursor;
@@ -42,10 +44,10 @@ public class MainActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		String[] displayFields = { "image_data", "time",
+		String[] displayFields = { "image_data", "title", "time"
 
 		};
-		int[] displayViews = { R.id.photo, R.id.title,
+		int[] displayViews = { R.id.photo, R.id.title, R.id.time
 
 		};
 
@@ -107,7 +109,7 @@ public class MainActivity extends Activity implements
 		showInfo.setClassName("edu.miami.masonandluke.phlogging",
 				"edu.miami.masonandluke.phlogging.ShowInformation");
 		showInfo.putExtra("edu.miami.masonandluke.phlogging.id", id);
-		startActivity(showInfo);
+		startActivityForResult(showInfo, ACTIVITY_SHOW);
 
 	}
 
@@ -127,8 +129,12 @@ public class MainActivity extends Activity implements
 							.getColumnIndex("image_data"))), 64, 64);
 			((ImageView) view).setImageBitmap(ThumbImage);
 
-			// ((ImageView)
-			// view).setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndex("image_data"))));
+			return true;
+		} else if (columnIndex == cursor.getColumnIndex("time")) {
+			long time = cursor.getLong(columnIndex);
+			Time noteTime = new Time();
+			noteTime.set(time);
+			((TextView) view).setText(noteTime.format("%A %D %T"));
 			return true;
 		} else {
 			return false;
