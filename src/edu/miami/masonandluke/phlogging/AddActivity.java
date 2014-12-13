@@ -29,8 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class AddActivity extends Activity implements
-LocationListener{
+public class AddActivity extends Activity implements LocationListener {
 
 	private static final int ACTIVITY_CAMERA_APP = 0;
 	private static final int SELECT_PICTURE = 1;
@@ -88,8 +87,9 @@ LocationListener{
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
-			startActivityForResult(Intent.createChooser(intent,
-					"Select Picture"), SELECT_PICTURE);
+			startActivityForResult(
+					Intent.createChooser(intent, "Select Picture"),
+					SELECT_PICTURE);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -113,11 +113,14 @@ LocationListener{
 			break;
 		case SELECT_PICTURE:
 			if (resultCode == RESULT_OK) {
+				Uri file = data.getData();
 
 				// Image captured and saved to fileUri specified in the Intent
 				ImageView view = (ImageView) findViewById(R.id.photo);
 				view.setImageURI(data.getData());
+				Log.i("", data.getData().getPath());
 				photoFile = new File(getPath(data.getData()));
+
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
 			} else {
@@ -126,9 +129,10 @@ LocationListener{
 			break;
 		}
 	}
+
 	public String getPath(Uri uri) {
-		// just some safety built in 
-		if( uri == null ) {
+		// just some safety built in
+		if (uri == null) {
 			// TODO perform some logging or show user feedback
 			return null;
 		}
@@ -136,16 +140,18 @@ LocationListener{
 		// this will only work for images selected from gallery
 		String[] projection = { MediaStore.Images.Media.DATA };
 		Cursor cursor = managedQuery(uri, projection, null, null, null);
-		if( cursor != null ){
+
+		if (cursor != null) {
+
 			int column_index = cursor
 					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			cursor.moveToFirst();
 			return cursor.getString(column_index);
 		}
 		// this is our fallback here
+
 		return uri.getPath();
 	}
-
 
 	String mCurrentPhotoPath;
 
@@ -155,7 +161,7 @@ LocationListener{
 
 		case R.id.save:
 			String description = ((EditText) findViewById(R.id.editDescription))
-			.getText().toString();
+					.getText().toString();
 			String title = ((EditText) findViewById(R.id.editTitle)).getText()
 					.toString();
 			long time = System.currentTimeMillis();
@@ -166,8 +172,8 @@ LocationListener{
 				values.put("image_data", photoFile.toString());
 			}
 			values.put("time", time);
-			values.put("long",Lon);
-			values.put("lat",Lat);
+			values.put("long", Lon);
+			values.put("lat", Lat);
 			phlogDB.addPhlog(values);
 			finish();
 			break;
@@ -180,20 +186,20 @@ LocationListener{
 	private File createImageFile() throws IOException {
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-		.format(new Date());
+				.format(new Date());
 		String imageFileName = "JPEG_" + timeStamp + "_";
 		File storageDir = getApplicationContext().getExternalFilesDir(null);
 		File image = File.createTempFile(imageFileName, /* prefix */
 				".jpg", /* suffix */
 				storageDir /* directory */
-				);
+		);
 
 		// Save a file: path for use with ACTION_VIEW intents
 		mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 		return image;
 	}
 
-	//-----------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------
 	@Override
 	public void onPause() {
 
@@ -201,30 +207,41 @@ LocationListener{
 
 		locationManager.removeUpdates(this);
 	}
-	//-----------------------------------------------------------------------------
 
-    private void getLocation() {
-    	locationManager = (LocationManager)(getSystemService(LOCATION_SERVICE));
-    	detectLocators();
-    }
-    
-	//-----------------------------------------------------------------------------
+	@Override
+	public void onResume() {
+
+		super.onResume();
+
+		getLocation();
+	}
+
+	// -----------------------------------------------------------------------------
+
+	private void getLocation() {
+		locationManager = (LocationManager) (getSystemService(LOCATION_SERVICE));
+		detectLocators();
+	}
+
+	// -----------------------------------------------------------------------------
 	private void detectLocators() {
 
 		List<String> locators;
 		locators = locationManager.getProviders(true);
 
-			if (locators.contains("gps")) {
-				locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this,null);	
-			}
-			else if  (locators.contains("network")) {
-				locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
-			}
-			else {
-				Toast.makeText(this,"Location Services Off",Toast.LENGTH_LONG).show();
+		if (locators.contains("gps")) {
+			locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,
+					this, null);
+		} else if (locators.contains("network")) {
+			locationManager.requestSingleUpdate(
+					LocationManager.NETWORK_PROVIDER, this, null);
+		} else {
+			Toast.makeText(this, "Location Services Off", Toast.LENGTH_LONG)
+					.show();
 		}
 	}
-	//-----------------------------------------------------------------------------
+
+	// -----------------------------------------------------------------------------
 
 	@Override
 	public void onLocationChanged(Location location) {
@@ -237,21 +254,19 @@ LocationListener{
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
-		
+
 	}
-
-
 
 }
