@@ -6,7 +6,11 @@
         android:icon="@drawable/ic_action_discard"
         android:showAsAction="ifRoom"
         android:title="@string/action_delete"/>
- 
+     <item
+        android:id="@+id/action_email"
+        android:icon="@drawable/ic_action_email"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_email"/>
 
     <!-- Settings, should always be in the overflow -->
     <item

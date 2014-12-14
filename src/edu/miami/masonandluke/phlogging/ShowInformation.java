@@ -17,7 +17,9 @@ public class ShowInformation extends Activity {
 
 	private long id = 0;
 	private PhloggingDB phlogDB;
-
+	private ContentValues values;
+	private String formattedTime;
+	private String latAndLong;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,7 +29,7 @@ public class ShowInformation extends Activity {
 		id = this.getIntent().getLongExtra(
 				"edu.miami.masonandluke.phlogging.id", 0L);
 
-		ContentValues values = phlogDB.getPhlogById(id);
+		values = phlogDB.getPhlogById(id);
 		String image = values.getAsString("image_data");
 
 		if (image != null) {
@@ -46,11 +48,12 @@ public class ShowInformation extends Activity {
 		textView = (TextView) findViewById(R.id.show_date);
 		Time timeObject = new Time();
 		timeObject.set(values.getAsLong("time"));
-		textView.setText(timeObject.format("%A %D %T"));
+		 formattedTime = timeObject.format("%A %D %T");
+		textView.setText(formattedTime);
 
 		double lat = values.getAsDouble("lat");
 		double lon = values.getAsDouble("long");
-		//
+		latAndLong = lat + lon + "";
 		textView = (TextView) findViewById(R.id.show_location);
 		textView.setText("Latitude was: " + lat + " Longitude is: " + lon);
 		//
@@ -71,6 +74,22 @@ public class ShowInformation extends Activity {
 		// Handle presses on the action bar items
 
 		switch (item.getItemId()) {
+		case R.id.action_email:
+			Intent emailIntent;
+			emailIntent = new Intent(Intent.ACTION_SEND);
+			emailIntent.setType("image/*");
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, "");
+			emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+					values.getAsString("title"));
+			emailIntent.putExtra(Intent.EXTRA_TEXT,
+					values.getAsString("description") + "\n" + formattedTime
+							+ "\n" + latAndLong);
+			emailIntent.putExtra(Intent.EXTRA_STREAM,
+					values.getAsString("image_data"));
+			startActivity(Intent.createChooser(emailIntent,
+					"Pick one of these options."));
+			startActivity(emailIntent);
+			return true;
 
 		case R.id.action_trash:
 			phlogDB.deletePhlog(id);
