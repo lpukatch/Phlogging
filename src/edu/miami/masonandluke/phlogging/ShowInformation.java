@@ -52,10 +52,10 @@ public class ShowInformation extends Activity {
 		double lon = values.getAsDouble("long");
 		//
 		textView = (TextView) findViewById(R.id.show_location);
-		textView.setText("Latitude is: " + lat + " Longitude is: " + lon);
+		textView.setText("Latitude was: " + lat + " Longitude is: " + lon);
 		//
-		// textView = (TextView)findViewById(R.id.show_orientation);
-		// textView.setText(values.getAsFloat("orientation").toString());
+		textView = (TextView) findViewById(R.id.show_orientation);
+		textView.setText("Orientation was:" + values.getAsFloat("orientation"));
 		//
 	}
 

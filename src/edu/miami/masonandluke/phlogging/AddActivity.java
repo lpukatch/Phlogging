@@ -9,9 +9,14 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,6 +24,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -29,7 +35,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class AddActivity extends Activity implements LocationListener {
+public class AddActivity extends Activity implements LocationListener,
+		SensorEventListener {
 
 	private static final int ACTIVITY_CAMERA_APP = 0;
 	private static final int SELECT_PICTURE = 1;
@@ -38,14 +45,15 @@ public class AddActivity extends Activity implements LocationListener {
 	private LocationManager locationManager;
 	private double Lat;
 	private double Lon;
+	private float degree;
+	private SensorManager sensorManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
 		phlogDB = new PhloggingDB(this);
-		getLocation();
-
+		sensorManager = (SensorManager) (getSystemService(SENSOR_SERVICE));
 	}
 
 	@Override
@@ -174,6 +182,8 @@ public class AddActivity extends Activity implements LocationListener {
 			values.put("time", time);
 			values.put("long", Lon);
 			values.put("lat", Lat);
+			values.put("orientation", degree);
+			Log.i("degree", degree + "");
 			phlogDB.addPhlog(values);
 			finish();
 			break;
@@ -212,8 +222,27 @@ public class AddActivity extends Activity implements LocationListener {
 	public void onResume() {
 
 		super.onResume();
-
 		getLocation();
+		startOrientation();
+
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		locationManager.removeUpdates(this);
+		sensorManager.unregisterListener(this);
+	}
+
+	private void startOrientation() {
+		if (sensorManager.getSensorList(Sensor.TYPE_ORIENTATION).isEmpty()) {
+			return;
+		} else {
+			sensorManager.registerListener(this,
+					sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+					SensorManager.SENSOR_DELAY_NORMAL);
+			return;
+		}
 	}
 
 	// -----------------------------------------------------------------------------
@@ -249,6 +278,7 @@ public class AddActivity extends Activity implements LocationListener {
 		Lon = location.getLatitude();
 		Lat = location.getLongitude();
 		locationManager.removeUpdates(this);
+		Toast.makeText(this, "Got Location", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -265,6 +295,24 @@ public class AddActivity extends Activity implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		switch (event.sensor.getType()) {
+		case Sensor.TYPE_ORIENTATION:
+			degree = event.values[0];
+			Log.i("String", event.values[0] + "");
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
 
 	}

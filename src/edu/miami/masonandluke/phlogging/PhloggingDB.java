@@ -153,7 +153,7 @@ public class PhloggingDB {
 					songData.put("lat", cursor.getDouble(index));
 				} else if (fieldNames[index].equals("long")) {
 					songData.put("long", cursor.getDouble(index));
-				} else if (fieldNames[index].equals("orientaton")) {
+				} else if (fieldNames[index].equals("orientation")) {
 					songData.put("orientation", cursor.getFloat(index));
 				} else if (fieldNames[index].equals("recording")) {
 					songData.put("recording", cursor.getBlob(index));
