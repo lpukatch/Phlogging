@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/show_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
         android:hint="No Title"
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/show_description"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="15"
         android:hint="No Description"

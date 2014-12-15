@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -71,6 +72,11 @@ public class ShowInformation extends Activity {
 		textView.setText("Orientation was:" + values.getAsFloat("orientation"));
 
 		recording = values.getAsByteArray("recording");
+		
+		if(recording == null) {
+			Button button = (Button) findViewById(R.id.play);
+			button.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	@Override

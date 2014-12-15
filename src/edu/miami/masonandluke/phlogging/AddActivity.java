@@ -38,6 +38,8 @@ import android.widget.Toast;
 public class AddActivity extends Activity implements LocationListener,
 		SensorEventListener {
 
+	private long id = 0;
+
 	private static final int ACTIVITY_CAMERA_APP = 0;
 	private static final int SELECT_PICTURE = 1;
 	private PhloggingDB phlogDB;
@@ -50,15 +52,39 @@ public class AddActivity extends Activity implements LocationListener,
 	private MediaRecorder recorder;
 	private String recordFileName;
 	private byte recording[];
+	private boolean edit = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
+		id = this.getIntent().getLongExtra(
+				"edu.miami.masonandluke.phlogging.id", 0L);
+		Log.i("id", id + "");
 		phlogDB = new PhloggingDB(this);
+		if (id != 0) {
+			addDataForEdit();
+			edit = true;
+		}
 		sensorManager = (SensorManager) (getSystemService(SENSOR_SERVICE));
 		recordFileName = getApplicationContext().getExternalFilesDir(null)
 				.toString() + "/recording.mp3";
+	}
+
+	private void addDataForEdit() {
+		ContentValues phlog = phlogDB.getPhlogById(id);
+		EditText description = (EditText) findViewById(R.id.editDescription);
+		description.setText(phlog.getAsString("description"));
+		EditText title = (EditText) findViewById(R.id.editTitle);
+		title.setText(phlog.getAsString("title"));
+
+		ImageView image = (ImageView) findViewById(R.id.photo);
+		String imageFile = phlog.getAsString("image_data");
+		if (imageFile != null) {
+			image.setImageURI(Uri.parse(imageFile));
+		}
+		recording = phlog.getAsByteArray("recording");
+
 	}
 
 	@Override
@@ -190,8 +216,11 @@ public class AddActivity extends Activity implements LocationListener,
 			values.put("orientation", degree);
 			Log.i("degree", degree + "");
 			values.put("recording", recording);
-
-			phlogDB.addPhlog(values);
+			if (edit) {
+				phlogDB.updatePhlog(id, values);
+			} else {
+				phlogDB.addPhlog(values);
+			}
 			finish();
 			break;
 		case R.id.record:

@@ -36,6 +36,8 @@ public class MainActivity extends Activity implements
 
 	private static final int ACTIVITY_SHOW = 1;
 
+	private static final int ACTIVITY_EDIT = 0;
+
 	private PhloggingDB phlogDB;
 	private Cursor listCursor;
 
@@ -96,8 +98,13 @@ public class MainActivity extends Activity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		// TODO Auto-generated method stub
-
+		
+		Intent showInfo = new Intent();
+		showInfo.setClassName("edu.miami.masonandluke.phlogging",
+				"edu.miami.masonandluke.phlogging.AddActivity");
+		showInfo.putExtra("edu.miami.masonandluke.phlogging.id", id);
+		startActivityForResult(showInfo, ACTIVITY_EDIT);
+		
 		return true;
 	}
 
