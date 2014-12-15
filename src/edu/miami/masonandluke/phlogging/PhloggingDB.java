@@ -19,15 +19,13 @@ public class PhloggingDB {
 	private static final String CREATE_IMAGE_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ PHLOGGING_TABLE_NAME
 			+ "(_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ "image_id INTEGER UNIQUE, "
-			+ "image_data STRING UNIQUE, "
+			+ "image_data STRING, "
 			+ "title TEXT,"
 			+ "description TEXT,"
-			+ "time LONG NOT NULL UNIQUE,"
+			+ "time LONG NOT NULL,"
 			+ "lat DOUBLE,"
 			+ "long DOUBLE,"
-			+ "orientation FLOAT,"
-			+ "recording BLOB);";
+			+ "orientation FLOAT," + "recording BLOB);";
 
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase theDB;
@@ -55,8 +53,8 @@ public class PhloggingDB {
 	// -----------------------------------------------------------------------------
 	public boolean updatePhlog(long imageId, ContentValues imageData) {
 
-		return (theDB.update(PHLOGGING_TABLE_NAME, imageData, "_id =" + imageId,
-				null) > 0);
+		return (theDB.update(PHLOGGING_TABLE_NAME, imageData,
+				"_id =" + imageId, null) > 0);
 	}
 
 	// -----------------------------------------------------------------------------
@@ -68,11 +66,11 @@ public class PhloggingDB {
 	// -----------------------------------------------------------------------------
 	public Cursor fetchAllPhlogs() {
 
-		String[] fieldNames = { "_id", "image_id", "image_data", "title", "recording",
+		String[] fieldNames = { "_id", "image_data", "title", "recording",
 				"image_data", "time" };
 
 		return (theDB.query(PHLOGGING_TABLE_NAME, fieldNames, null, null, null,
-				null, "image_id"));
+				null, null));
 	}
 
 	// -----------------------------------------------------------------------------
@@ -94,8 +92,8 @@ public class PhloggingDB {
 	public void removeEmptyFiles() {
 		Cursor cursor;
 		String[] fieldNames = { "_id", "image_data" };
-		cursor = theDB.query(PHLOGGING_TABLE_NAME, fieldNames, null, null, null,
-				null, "image_id");
+		cursor = theDB.query(PHLOGGING_TABLE_NAME, fieldNames, null, null,
+				null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				int imageMediaId = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -114,19 +112,6 @@ public class PhloggingDB {
 	}
 
 	// -----------------------------------------------------------------------------
-	public ContentValues getImageByMediaId(long imageId) {
-
-		Cursor cursor;
-		ContentValues imageData;
-
-		cursor = theDB.query(PHLOGGING_TABLE_NAME, null, "image_id = " + imageId,
-				null, null, null, null);
-		imageData = imageDataFromCursor(cursor);
-		cursor.close();
-		return (imageData);
-	}
-
-	// -----------------------------------------------------------------------------
 	private ContentValues imageDataFromCursor(Cursor cursor) {
 
 		String[] fieldNames;
@@ -139,8 +124,7 @@ public class PhloggingDB {
 			for (index = 0; index < fieldNames.length; index++) {
 				if (fieldNames[index].equals("_id")) {
 					songData.put("_id", cursor.getInt(index));
-				} else if (fieldNames[index].equals("image_id")) {
-					songData.put("image_id", cursor.getInt(index));
+
 				} else if (fieldNames[index].equals("title")) {
 					songData.put("title", cursor.getString(index));
 				} else if (fieldNames[index].equals("image_data")) {

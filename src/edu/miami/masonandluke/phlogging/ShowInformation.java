@@ -72,8 +72,8 @@ public class ShowInformation extends Activity {
 		textView.setText("Orientation was:" + values.getAsFloat("orientation"));
 
 		recording = values.getAsByteArray("recording");
-		
-		if(recording == null) {
+
+		if (recording == null) {
 			Button button = (Button) findViewById(R.id.play);
 			button.setVisibility(View.INVISIBLE);
 		}
@@ -102,7 +102,7 @@ public class ShowInformation extends Activity {
 					values.getAsString("description") + "\n" + formattedTime
 							+ "\n" + latAndLong);
 			emailIntent.putExtra(Intent.EXTRA_STREAM,
-					values.getAsString("image_data"));
+					Uri.parse("file://" + values.getAsString("image_data")));
 			startActivity(Intent.createChooser(emailIntent,
 					"Pick one of these options."));
 			startActivity(emailIntent);
@@ -110,6 +110,18 @@ public class ShowInformation extends Activity {
 
 		case R.id.action_trash:
 			phlogDB.deletePhlog(id);
+			finish();
+			return true;
+		case R.id.action_copy:
+			ContentValues oValues = new ContentValues();
+			oValues.put("time", values.getAsLong("time"));
+			oValues.put("long", values.getAsDouble("long"));
+			oValues.put("lat", values.getAsDouble("lat"));
+			oValues.put("image_data", values.getAsString("image_data"));
+			oValues.put("description", values.getAsString("description"));
+			oValues.put("title", values.getAsString("title"));
+
+			phlogDB.addPhlog(oValues);
 			finish();
 			return true;
 		default:

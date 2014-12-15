@@ -11,11 +11,11 @@
         android:icon="@drawable/ic_action_email"
         android:showAsAction="ifRoom"
         android:title="@string/action_email"/>
-
-    <!-- Settings, should always be in the overflow -->
-    <item
-        android:id="@+id/action_settings"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+     <item
+        android:id="@+id/action_copy"
+        android:icon="@drawable/ic_action_copy"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_copy"/>
+     
 
 </menu>

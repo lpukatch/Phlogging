@@ -9,6 +9,7 @@
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>
     <string name="action_email">Email</string>
+    <string name="action_copy">Copy</string>
     <string name="title_activity_add">Add</string>
     <string name="title_activity_show">Display</string>
 

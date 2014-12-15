@@ -12,10 +12,4 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_camera"/>
 
-    <!-- Settings, should always be in the overflow -->
-    <item
-        android:id="@+id/action_settings"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
-
 </menu>
