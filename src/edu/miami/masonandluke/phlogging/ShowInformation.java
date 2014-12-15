@@ -1,8 +1,14 @@
 package edu.miami.masonandluke.phlogging;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -10,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +27,9 @@ public class ShowInformation extends Activity {
 	private ContentValues values;
 	private String formattedTime;
 	private String latAndLong;
+	private MediaPlayer recordingPlayer;
+	private byte recording[];
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,7 +58,7 @@ public class ShowInformation extends Activity {
 		textView = (TextView) findViewById(R.id.show_date);
 		Time timeObject = new Time();
 		timeObject.set(values.getAsLong("time"));
-		 formattedTime = timeObject.format("%A %D %T");
+		formattedTime = timeObject.format("%A %D %T");
 		textView.setText(formattedTime);
 
 		double lat = values.getAsDouble("lat");
@@ -59,7 +69,8 @@ public class ShowInformation extends Activity {
 		//
 		textView = (TextView) findViewById(R.id.show_orientation);
 		textView.setText("Orientation was:" + values.getAsFloat("orientation"));
-		//
+
+		recording = values.getAsByteArray("recording");
 	}
 
 	@Override
@@ -99,4 +110,46 @@ public class ShowInformation extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
+	public void myClickHandler(View view) {
+		switch (view.getId()) {
+		case R.id.play:
+			playRecording();
+			break;
+		default:
+			break;
+
+		}
+	}
+
+	private void playRecording() {
+
+		// Play the recording by setting up a new mediaPlayer
+		FileOutputStream recordStream;
+		recordingPlayer = new MediaPlayer();
+		try {
+			// Set a new recording file
+			recordStream = new FileOutputStream(getApplicationContext()
+					.getExternalFilesDir(null).toString() + "/recording.mp3");
+
+			// Write the recording to a file from the byte array
+			recordStream.write(recording);
+			recordStream.close();
+			recordingPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			recordingPlayer.setDataSource(getApplicationContext()
+					.getExternalFilesDir(null).toString() + "/recording.mp3");
+
+			// Prepare and start the media player
+			recordingPlayer.prepare();
+			recordingPlayer.start();
+			Log.i("Spoken", "recording should be playing");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }

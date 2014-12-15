@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center" >
+    android:gravity="center"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/show_title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="20"
+        android:layout_weight="10"
         android:hint="No Title"
         android:textSize="25sp" >
     </TextView>
@@ -18,9 +18,8 @@
         android:id="@+id/show_description"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="20"
-                android:hint="No Description"
-        
+        android:layout_weight="15"
+        android:hint="No Description"
         android:textSize="16sp" >
     </TextView>
 
@@ -44,8 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="10"
-                android:hint="No location"
-        
+        android:hint="No location"
         android:textSize="16sp" >
     </TextView>
 
@@ -54,9 +52,15 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="10"
-                android:hint="No Orientation"
-        
+        android:hint="No Orientation"
         android:textSize="16sp" >
     </TextView>
+
+    <Button
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="myClickHandler"
+        android:text="Play" />
 
 </LinearLayout>

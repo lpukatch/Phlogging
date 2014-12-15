@@ -47,6 +47,9 @@ public class AddActivity extends Activity implements LocationListener,
 	private double Lon;
 	private float degree;
 	private SensorManager sensorManager;
+	private MediaRecorder recorder;
+	private String recordFileName;
+	private byte recording[];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class AddActivity extends Activity implements LocationListener,
 		setContentView(R.layout.activity_add);
 		phlogDB = new PhloggingDB(this);
 		sensorManager = (SensorManager) (getSystemService(SENSOR_SERVICE));
+		recordFileName = getApplicationContext().getExternalFilesDir(null)
+				.toString() + "/recording.mp3";
 	}
 
 	@Override
@@ -184,10 +189,50 @@ public class AddActivity extends Activity implements LocationListener,
 			values.put("lat", Lat);
 			values.put("orientation", degree);
 			Log.i("degree", degree + "");
+			values.put("recording", recording);
+
 			phlogDB.addPhlog(values);
 			finish();
 			break;
+		case R.id.record:
+			// Start a new recorder
+			recorder = new MediaRecorder();
+			recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+			recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+			recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+			recorder.setOutputFile(recordFileName);
+			try {
+				recorder.prepare();
+			} catch (IOException e) {
+				Log.i("AUDIO ERROR", "PREPARING RECORDER");
+				// ----Should do something here
+			}
+			// Start the recorder
+			recorder.start();
+			break;
+		case R.id.stop:
+			// Stop the recorder and release it
+			recorder.stop();
+			recorder.release();
 
+			// Convert the file to a byte array and set it as a recording
+			FileInputStream fileInputStream = null;
+			File recordFile = new File(recordFileName);
+			recording = new byte[(int) recordFile.length()];
+			try {
+				// convert file into array of bytes
+				fileInputStream = new FileInputStream(recordFile);
+				fileInputStream.read(recording);
+				fileInputStream.close();
+
+				Log.i("Read in", fileInputStream + "");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		case R.id.clear:
+			recording = null;
+			break;
 		default:
 			break;
 		}
