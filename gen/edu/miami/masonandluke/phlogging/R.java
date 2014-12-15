@@ -10,6 +10,12 @@ package edu.miami.masonandluke.phlogging;
 public final class R {
     public static final class attr {
     }
+    public static final class dimen {
+        public static final int imageMargin=0x7f060002;
+        public static final int showSmallTextSize=0x7f060003;
+        public static final int titleTextSize=0x7f060000;
+        public static final int titleTextSizeList=0x7f060001;
+    }
     public static final class drawable {
         public static final int ic_action_camera=0x7f020000;
         public static final int ic_action_copy=0x7f020001;
@@ -20,30 +26,38 @@ public final class R {
         public static final int ic_launcher=0x7f020006;
     }
     public static final class id {
-        public static final int action_add=0x7f060012;
-        public static final int action_add_gallery=0x7f060013;
-        public static final int action_camera=0x7f060014;
-        public static final int action_copy=0x7f060017;
-        public static final int action_email=0x7f060016;
-        public static final int action_trash=0x7f060015;
-        public static final int clear=0x7f060007;
-        public static final int description=0x7f060003;
-        public static final int editDescription=0x7f060004;
-        public static final int editTitle=0x7f060002;
-        public static final int photo=0x7f060000;
-        public static final int play=0x7f060011;
-        public static final int record=0x7f060005;
-        public static final int save=0x7f060008;
-        public static final int show_date=0x7f06000d;
-        public static final int show_description=0x7f06000c;
-        public static final int show_location=0x7f06000f;
-        public static final int show_orientation=0x7f060010;
-        public static final int show_photo=0x7f06000e;
-        public static final int show_title=0x7f06000b;
-        public static final int stop=0x7f060006;
-        public static final int the_list=0x7f060009;
-        public static final int time=0x7f06000a;
-        public static final int title=0x7f060001;
+        public static final int action_add=0x7f080012;
+        public static final int action_add_gallery=0x7f080013;
+        public static final int action_camera=0x7f080014;
+        public static final int action_copy=0x7f080017;
+        public static final int action_email=0x7f080016;
+        public static final int action_trash=0x7f080015;
+        public static final int clear=0x7f080007;
+        public static final int description=0x7f080003;
+        public static final int editDescription=0x7f080004;
+        public static final int editTitle=0x7f080002;
+        public static final int photo=0x7f080000;
+        public static final int play=0x7f080011;
+        public static final int record=0x7f080005;
+        public static final int save=0x7f080008;
+        public static final int show_date=0x7f08000d;
+        public static final int show_description=0x7f08000c;
+        public static final int show_location=0x7f08000f;
+        public static final int show_orientation=0x7f080010;
+        public static final int show_photo=0x7f08000e;
+        public static final int show_title=0x7f08000b;
+        public static final int stop=0x7f080006;
+        public static final int the_list=0x7f080009;
+        public static final int time=0x7f08000a;
+        public static final int title=0x7f080001;
+    }
+    public static final class integer {
+        public static final int editEms=0x7f050004;
+        public static final int fifteen=0x7f050005;
+        public static final int half=0x7f050000;
+        public static final int quarter=0x7f050001;
+        public static final int tenth=0x7f050002;
+        public static final int third=0x7f050003;
     }
     public static final class layout {
         public static final int activity_add=0x7f030000;
@@ -52,9 +66,9 @@ public final class R {
         public static final int showinformation=0x7f030003;
     }
     public static final class menu {
-        public static final int main_activity_actions=0x7f050000;
-        public static final int menu_activity_add=0x7f050001;
-        public static final int show_activity_actions=0x7f050002;
+        public static final int main_activity_actions=0x7f070000;
+        public static final int menu_activity_add=0x7f070001;
+        public static final int show_activity_actions=0x7f070002;
     }
     public static final class string {
         public static final int action_add=0x7f040005;
@@ -65,7 +79,21 @@ public final class R {
         public static final int action_email=0x7f040007;
         public static final int action_settings=0x7f040003;
         public static final int app_name=0x7f040000;
+        public static final int clear=0x7f040010;
+        public static final int description=0x7f04000e;
+        public static final int giveDescription=0x7f04000d;
+        public static final int giveTitle=0x7f04000b;
         public static final int hello_world=0x7f040001;
+        public static final int noDescription=0x7f040016;
+        public static final int noLocation=0x7f040017;
+        public static final int noOrientation=0x7f040018;
+        public static final int noTitle=0x7f040015;
+        public static final int phlogImage=0x7f040014;
+        public static final int play=0x7f040012;
+        public static final int record=0x7f04000f;
+        public static final int save=0x7f040013;
+        public static final int stop=0x7f040011;
+        public static final int title=0x7f04000c;
         public static final int title_activity_add=0x7f040009;
         public static final int title_activity_show=0x7f04000a;
     }

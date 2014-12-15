@@ -9,20 +9,20 @@
         android:id="@+id/show_title"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="@integer/tenth"
         android:gravity="center"
-        android:hint="No Title"
-        android:textSize="25sp" >
+        android:hint="@string/noTitle"
+        android:textSize="@dimen/titleTextSize" >
     </TextView>
 
     <TextView
         android:id="@+id/show_description"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="15"
+        android:layout_weight="@integer/fifteen"
         android:gravity="center"
-        android:hint="No Description"
-        android:textSize="16sp" >
+        android:hint="@string/noDescription"
+        android:textSize="@dimen/showSmallTextSize" >
     </TextView>
 
     <TextView
@@ -30,34 +30,35 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:textSize="16sp" >
+        android:textSize="@dimen/showSmallTextSize" >
     </TextView>
 
     <ImageView
         android:id="@+id/show_photo"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_weight="30" >
+        android:contentDescription="@string/phlogImage"
+        android:layout_marginBottom="@dimen/imageMargin"
+        android:layout_marginTop="@dimen/imageMargin"
+        android:layout_weight="@integer/third" >
     </ImageView>
 
     <TextView
         android:id="@+id/show_location"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="10"
-        android:hint="No location"
-        android:textSize="16sp" >
+        android:layout_weight="@integer/tenth"
+        android:hint="@string/noLocation"
+        android:textSize="@dimen/showSmallTextSize" >
     </TextView>
 
     <TextView
         android:id="@+id/show_orientation"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="10"
-        android:hint="No Orientation"
-        android:textSize="16sp" >
+        android:layout_weight="@integer/tenth"
+        android:hint="@string/noOrientation"
+        android:textSize="@dimen/showSmallTextSize" >
     </TextView>
 
     <Button
@@ -65,6 +66,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="myClickHandler"
-        android:text="Play" />
+        android:text="@string/play" />
 
 </LinearLayout>

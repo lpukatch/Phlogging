@@ -6,22 +6,23 @@
     <ImageView
         android:id="@+id/photo"
         android:layout_width="0dp"
+        android:contentDescription="@string/phlogImage"
         android:layout_height="wrap_content"
-        android:layout_weight="25" >
+        android:layout_weight="@integer/quarter" >
     </ImageView>
 
     <TextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="50"
-        android:textSize="16sp" >
+        android:layout_weight="@integer/half"
+        android:textSize="@dimen/titleTextSizeList" >
     </TextView>
 
     <TextView
         android:id="@+id/time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="25" />
+        android:layout_weight="@integer/quarter" />
 
 </LinearLayout>

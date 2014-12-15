@@ -12,5 +12,31 @@
     <string name="action_copy">Copy</string>
     <string name="title_activity_add">Add</string>
     <string name="title_activity_show">Display</string>
+    <string name="giveTitle">Give this Phlog a Title</string>
+    <string name="title">Title</string>
+    <string name="giveDescription">Give this Phlog a Description</string>
+    <string name="description">Description</string>
+    <string name="record">Record</string>
+    <string name="clear">Clear</string>
+    <string name="stop">Stop</string>
+    <string name="play">Play</string>
+    <string name="save">Save</string>
+    <string name="phlogImage">Phlog Image</string>
+    <string name="noTitle">No Title</string>
+    <string name="noDescription">No Description</string>
+    <string name="noLocation">No Location</string>
+    <string name="noOrientation">No Orientation</string>
+
+    <integer name="half">50</integer>
+    <integer name="quarter">25</integer>
+    <integer name="tenth">10</integer>
+    <integer name="third">30</integer>
+    <integer name="editEms">10</integer>
+    <integer name="fifteen">15</integer>
+    
+    <dimen name="titleTextSize">25sp</dimen>
+    <dimen name="titleTextSizeList">16sp</dimen>
+    <dimen name="imageMargin">30dp</dimen>
+    <dimen name="showSmallTextSize">16sp</dimen>
 
 </resources>

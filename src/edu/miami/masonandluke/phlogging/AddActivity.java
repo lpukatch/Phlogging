@@ -9,10 +9,8 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,8 +21,6 @@ import android.location.LocationManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -43,7 +39,7 @@ public class AddActivity extends Activity implements LocationListener,
 	private static final int ACTIVITY_CAMERA_APP = 0;
 	private static final int SELECT_PICTURE = 1;
 	private PhloggingDB phlogDB;
-	private File photoFile;
+	private Uri photoUri;
 	private LocationManager locationManager;
 	private double Lat;
 	private double Lon;
@@ -61,7 +57,6 @@ public class AddActivity extends Activity implements LocationListener,
 		id = this.getIntent().getLongExtra(
 				"edu.miami.masonandluke.phlogging.id", 0L);
 		Log.i("id", id + "");
-		phlogDB = new PhloggingDB(this);
 		if (id != 0) {
 			addDataForEdit();
 			edit = true;
@@ -72,6 +67,8 @@ public class AddActivity extends Activity implements LocationListener,
 	}
 
 	private void addDataForEdit() {
+		phlogDB = new PhloggingDB(this);
+
 		ContentValues phlog = phlogDB.getPhlogById(id);
 		EditText description = (EditText) findViewById(R.id.editDescription);
 		description.setText(phlog.getAsString("description"));
@@ -84,6 +81,7 @@ public class AddActivity extends Activity implements LocationListener,
 			image.setImageURI(Uri.parse(imageFile));
 		}
 		recording = phlog.getAsByteArray("recording");
+		phlogDB.close();
 
 	}
 
@@ -105,9 +103,11 @@ public class AddActivity extends Activity implements LocationListener,
 			// Ensure that there's a camera activity to handle the intent
 			if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 				// Create the File where the photo should go
-				photoFile = null;
+				File photoFile = null;
 				try {
 					photoFile = createImageFile();
+					photoUri = Uri.fromFile(photoFile);
+
 				} catch (IOException ex) {
 					// Error occurred while creating the File
 
@@ -115,7 +115,7 @@ public class AddActivity extends Activity implements LocationListener,
 				// Continue only if the File was successfully created
 				if (photoFile != null) {
 					takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-							Uri.fromFile(photoFile));
+							photoUri);
 					startActivityForResult(takePictureIntent,
 							ACTIVITY_CAMERA_APP);
 				}
@@ -142,7 +142,7 @@ public class AddActivity extends Activity implements LocationListener,
 			if (resultCode == RESULT_OK) {
 				// Image captured and saved to fileUri specified in the Intent
 				ImageView view = (ImageView) findViewById(R.id.photo);
-				view.setImageURI(Uri.fromFile(photoFile));
+				view.setImageURI(photoUri);
 
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
@@ -152,13 +152,23 @@ public class AddActivity extends Activity implements LocationListener,
 			break;
 		case SELECT_PICTURE:
 			if (resultCode == RESULT_OK) {
-				Uri file = data.getData();
+				Uri selectedImage = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-				// Image captured and saved to fileUri specified in the Intent
-				ImageView view = (ImageView) findViewById(R.id.photo);
-				view.setImageURI(data.getData());
-				Log.i("", data.getData().getPath());
-				photoFile = new File(getPath(data.getData()));
+				Cursor cursor = getContentResolver().query(selectedImage,
+						filePathColumn, null, null, null);
+				if (cursor.moveToFirst()) {
+
+					int columnIndex = cursor
+							.getColumnIndex(MediaStore.Images.Media.DATA);
+					String filePath = cursor.getString(columnIndex);
+					cursor.close();
+					// Image captured and saved to fileUri specified in the
+					// Intent
+					ImageView view = (ImageView) findViewById(R.id.photo);
+					view.setImageURI(Uri.parse(filePath));
+					photoUri = Uri.parse(filePath);
+				}
 
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
@@ -199,6 +209,8 @@ public class AddActivity extends Activity implements LocationListener,
 		switch (view.getId()) {
 
 		case R.id.save:
+			phlogDB = new PhloggingDB(this);
+
 			String description = ((EditText) findViewById(R.id.editDescription))
 					.getText().toString();
 			String title = ((EditText) findViewById(R.id.editTitle)).getText()
@@ -207,12 +219,13 @@ public class AddActivity extends Activity implements LocationListener,
 			ContentValues values = new ContentValues();
 			values.put("description", description);
 			values.put("title", title);
-			if (photoFile != null) {
-				values.put("image_data", photoFile.toString());
+			if (photoUri != null) {
+				values.put("image_data", photoUri.toString());
 			}
 			values.put("time", time);
 			values.put("long", Lon);
 			values.put("lat", Lat);
+
 			values.put("orientation", degree);
 			Log.i("degree", degree + "");
 			values.put("recording", recording);
@@ -221,6 +234,7 @@ public class AddActivity extends Activity implements LocationListener,
 			} else {
 				phlogDB.addPhlog(values);
 			}
+			phlogDB.close();
 			finish();
 			break;
 		case R.id.record:
@@ -288,7 +302,6 @@ public class AddActivity extends Activity implements LocationListener,
 	public void onPause() {
 
 		super.onPause();
-
 		locationManager.removeUpdates(this);
 	}
 

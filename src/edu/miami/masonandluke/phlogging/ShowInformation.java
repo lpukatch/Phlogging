@@ -42,7 +42,7 @@ public class ShowInformation extends Activity {
 
 		values = phlogDB.getPhlogById(id);
 		String image = values.getAsString("image_data");
-
+		Log.i("image", image + "");
 		if (image != null) {
 			Uri imageUri = Uri.parse(image);
 
@@ -64,19 +64,26 @@ public class ShowInformation extends Activity {
 
 		double lat = values.getAsDouble("lat");
 		double lon = values.getAsDouble("long");
-		latAndLong = lat + lon + "";
-		textView = (TextView) findViewById(R.id.show_location);
-		textView.setText("Latitude was: " + lat + " Longitude is: " + lon);
-		//
-		textView = (TextView) findViewById(R.id.show_orientation);
-		textView.setText("Orientation was:" + values.getAsFloat("orientation"));
 
+		if (lat != 0 && lon != 0) {
+			latAndLong = lat + lon + "";
+			textView = (TextView) findViewById(R.id.show_location);
+			textView.setText("Latitude was: " + lat + " Longitude is: " + lon);
+		}
+
+		textView = (TextView) findViewById(R.id.show_orientation);
+		float orientation = values.getAsFloat("orientation");
+		if (orientation != 0) {
+			textView.setText("Orientation was:" + orientation);
+		}
 		recording = values.getAsByteArray("recording");
 
 		if (recording == null) {
 			Button button = (Button) findViewById(R.id.play);
 			button.setVisibility(View.INVISIBLE);
 		}
+		phlogDB.close();
+
 	}
 
 	@Override
@@ -92,6 +99,7 @@ public class ShowInformation extends Activity {
 
 		switch (item.getItemId()) {
 		case R.id.action_email:
+
 			Intent emailIntent;
 			emailIntent = new Intent(Intent.ACTION_SEND);
 			emailIntent.setType("image/*");
@@ -105,14 +113,20 @@ public class ShowInformation extends Activity {
 					Uri.parse("file://" + values.getAsString("image_data")));
 			startActivity(Intent.createChooser(emailIntent,
 					"Pick one of these options."));
+
 			startActivity(emailIntent);
 			return true;
 
 		case R.id.action_trash:
+			phlogDB = new PhloggingDB(this);
+
 			phlogDB.deletePhlog(id);
+			phlogDB.close();
 			finish();
 			return true;
 		case R.id.action_copy:
+			phlogDB = new PhloggingDB(this);
+
 			ContentValues oValues = new ContentValues();
 			oValues.put("time", values.getAsLong("time"));
 			oValues.put("long", values.getAsDouble("long"));
@@ -122,6 +136,7 @@ public class ShowInformation extends Activity {
 			oValues.put("title", values.getAsString("title"));
 
 			phlogDB.addPhlog(oValues);
+			phlogDB.close();
 			finish();
 			return true;
 		default:
@@ -170,4 +185,22 @@ public class ShowInformation extends Activity {
 		}
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public void onPause() {
+
+		super.onPause();
+
+	}
+
+	@Override
+	public void onResume() {
+
+		super.onResume();
+
+	}
 }

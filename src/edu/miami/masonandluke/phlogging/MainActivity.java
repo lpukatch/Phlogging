@@ -1,9 +1,5 @@
 package edu.miami.masonandluke.phlogging;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,8 +8,6 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
@@ -21,13 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Toast;
 
 public class MainActivity extends Activity implements
 		android.widget.SimpleCursorAdapter.ViewBinder, OnItemClickListener,
@@ -85,6 +78,8 @@ public class MainActivity extends Activity implements
 		switch (item.getItemId()) {
 
 		case R.id.action_add:
+			phlogDB.close();
+
 			Intent add = new Intent();
 			add.setClassName("edu.miami.masonandluke.phlogging",
 					"edu.miami.masonandluke.phlogging.AddActivity");
@@ -96,15 +91,37 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		phlogDB.close();
+	}
+
+	@Override
+	public void onPause() {
+
+		super.onPause();
+		phlogDB.close();
+
+	}
+
+	@Override
+	public void onResume() {
+
+		super.onResume();
+		phlogDB = new PhloggingDB(this);
+
+	}
+
+	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		
+
 		Intent showInfo = new Intent();
 		showInfo.setClassName("edu.miami.masonandluke.phlogging",
 				"edu.miami.masonandluke.phlogging.AddActivity");
 		showInfo.putExtra("edu.miami.masonandluke.phlogging.id", id);
 		startActivityForResult(showInfo, ACTIVITY_EDIT);
-		
+
 		return true;
 	}
 
@@ -131,11 +148,16 @@ public class MainActivity extends Activity implements
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		// TODO Auto-generated method stub
 		if (columnIndex == cursor.getColumnIndex("image_data")) {
-			Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory
-					.decodeFile(cursor.getString(cursor
-							.getColumnIndex("image_data"))), 64, 64);
-			((ImageView) view).setImageBitmap(ThumbImage);
+			String image = cursor
+					.getString(cursor.getColumnIndex("image_data"));
+			Log.i("Help", image + "");
+			if (image != null) {
+				Uri thumb = Uri.parse(image);
+				Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+						BitmapFactory.decodeFile(thumb.getPath()), 92, 92);
 
+				((ImageView) view).setImageBitmap(ThumbImage);
+			}
 			return true;
 		} else if (columnIndex == cursor.getColumnIndex("time")) {
 			long time = cursor.getLong(columnIndex);
